@@ -1,6 +1,4 @@
-# DriftGuard: drift-cause triage, input self-repair and guarded retraining for predictive maintenance
-
-RVCE ISE, AIML (IS353IA) Lab Part B. Students: Atnakuri Siva Sai Lakshman (1RV24IS019), Ayush Ranjan (1RV24IS022).
+# DriftGuard: Drift-Cause Triage, Input Self-Repair and Guarded Retraining for Predictive Maintenance
 
 ## Idea
 A failure-prediction model degrades when sensors drift or break. DriftGuard detects drift, diagnoses the CAUSE

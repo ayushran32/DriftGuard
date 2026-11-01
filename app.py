@@ -1,6 +1,6 @@
-"""DriftGuard — Industrial Predictive Maintenance Monitor & Root-Cause Triage System.
-Operating on AI4I 2020 Real Sensor Stream (UCI Machine Learning Repository).
-Run:  streamlit run app.py
+"""DriftGuard — Modern Full-Width SaaS Predictive Maintenance Platform.
+Aesthetic inspired by Linear, Vercel, and Raycast.
+Run: streamlit run app.py
 """
 import json
 from pathlib import Path
@@ -15,171 +15,107 @@ from driftguard.engine import DriftGuard, NaiveRetrainer, Static, run_strategy
 
 # ── page config ───────────────────────────────────────────────────────────────
 st.set_page_config(
-    page_title="DriftGuard | Industrial Predictive Maintenance",
-    page_icon="⚙️",
+    page_title="DriftGuard | Predictive Maintenance Intelligence",
+    page_icon="🛡️",
     layout="wide",
-    initial_sidebar_state="expanded",
+    initial_sidebar_state="collapsed",
 )
 
-# ── global enterprise css ─────────────────────────────────────────────────────
+# ── modern linear/vercel design system ─────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
+/* Global Reset & Background */
 html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
-    background: #080d1a !important;
-    color: #e2e8f0 !important;
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
+    background: #030712 !important;
+    color: #f3f4f6 !important;
+    font-family: 'Plus Jakarta Sans', -apple-system, sans-serif !important;
 }
 
-/* Sidebar Styling */
-[data-testid="stSidebar"] {
-    background: #0d1527 !important;
-    border-right: 1px solid rgba(148, 163, 184, 0.12) !important;
-}
-[data-testid="stSidebar"] p,
-[data-testid="stSidebar"] label,
-[data-testid="stSidebar"] div {
-    color: #94a3b8 !important;
-}
-[data-testid="stSidebar"] span[class*="material-symbols"],
-[data-testid="stSidebarCollapseButton"] span,
-[data-testid="stSidebarCollapsedControl"] span {
-    font-family: 'Material Symbols Rounded' !important;
+/* Hide Default Sidebar Completely */
+[data-testid="stSidebar"],
+[data-testid="stSidebarCollapseButton"],
+[data-testid="stSidebarCollapsedControl"] {
+    display: none !important;
 }
 
-/* Form Controls */
-.stSelectbox > div > div {
-    background: #131d33 !important;
-    border: 1px solid rgba(148, 163, 184, 0.2) !important;
-    border-radius: 6px !important;
-    color: #f1f5f9 !important;
-    font-family: 'Inter', sans-serif !important;
+/* Hide Streamlit Default Chrome */
+footer, #MainMenu, .stDeployButton, [data-testid="stToolbar"], header[data-testid="stHeader"] {
+    display: none !important;
 }
-.stNumberInput input {
-    background: #131d33 !important;
-    border: 1px solid rgba(148, 163, 184, 0.2) !important;
-    border-radius: 6px !important;
-    color: #f1f5f9 !important;
-    font-family: 'JetBrains Mono', monospace !important;
+
+.block-container {
+    padding: 1rem 2rem !important;
+    max-width: 1400px !important;
+    margin: 0 auto !important;
 }
+
+/* Glassmorphism Controls Header */
+.top-nav {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 10px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+/* Streamlit Widget Overrides for Linear/Vercel Look */
+div[data-baseweb="select"] > div {
+    background: rgba(255, 255, 255, 0.04) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 10px !important;
+    color: #f3f4f6 !important;
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+    font-size: 0.88rem !important;
+    transition: all 0.2s ease !important;
+}
+div[data-baseweb="select"] > div:hover {
+    border-color: rgba(56, 189, 248, 0.4) !important;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.15) !important;
+}
+
+.stSlider [data-baseweb="slider"] {
+    margin-top: -6px;
+}
+
 .stButton > button {
-    background: #0284c7 !important;
+    background: linear-gradient(135deg, #06b6d4, #0284c7) !important;
     color: #ffffff !important;
-    font-weight: 600 !important;
-    border: 1px solid #38bdf8 !important;
-    border-radius: 6px !important;
-    padding: 0.55rem 1.2rem !important;
+    font-weight: 700 !important;
+    border: none !important;
+    border-radius: 10px !important;
+    padding: 0.5rem 1.4rem !important;
     font-size: 0.88rem !important;
     width: 100% !important;
-    letter-spacing: 0.3px !important;
-    box-shadow: 0 2px 10px rgba(2, 132, 199, 0.35) !important;
-    transition: all 0.15s ease-in-out !important;
+    box-shadow: 0 0 20px rgba(6, 182, 212, 0.35) !important;
+    transition: all 0.2s ease !important;
 }
 .stButton > button:hover {
-    background: #0369a1 !important;
-    border-color: #7dd3fc !important;
-    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.55) !important;
+    box-shadow: 0 0 30px rgba(6, 182, 212, 0.6) !important;
+    transform: translateY(-1px) !important;
 }
 
-/* Hide Default Streamlit Chrome */
-footer { display: none !important; }
-#MainMenu { display: none !important; }
-.stDeployButton { display: none !important; }
-[data-testid="stToolbar"] { display: none !important; }
-header[data-testid="stHeader"] { display: none !important; }
-.block-container {
-    padding-top: 1.2rem !important;
-    padding-bottom: 0.5rem !important;
-    max-width: 98% !important;
-}
-
-@keyframes pulse-live {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.4; transform: scale(0.92); }
+/* Subtle Aurora Ambient Glow */
+.ambient-glow {
+    position: fixed;
+    top: 0;
+    left: 20%;
+    width: 60%;
+    height: 350px;
+    background: radial-gradient(ellipse at top, rgba(6, 182, 212, 0.08) 0%, rgba(99, 102, 241, 0.04) 50%, transparent 80%);
+    pointer-events: none;
+    z-index: 0;
 }
 </style>
+<div class="ambient-glow"></div>
 """, unsafe_allow_html=True)
-
-# ── color schemes & mappings ──────────────────────────────────────────────────
-CAUSE_COLOR = {
-    "SENSOR_FAULT":  "#f43f5e",
-    "REGIME_SHIFT":  "#f59e0b",
-    "FLEET_AGING":   "#a855f7",
-    "CONCEPT_DRIFT": "#f97316",
-    "NONE":          "#475569",
-}
-
-EVENT_COLOR = {
-    "ALERT":        "#f43f5e",
-    "LABEL_ALARM":  "#f97316",
-    "DEPLOY":       "#10b981",
-    "REJECT":       "#64748b",
-    "HARMLESS":     "#0284c7",
-    "CLEAR":        "#475569",
-    "REBASELINE":   "#a855f7",
-}
-
-STRAT_COLOR = {
-    "Static model":         "#64748b",
-    "Naive drift->retrain": "#f59e0b",
-    "DriftGuard":           "#0ea5e9",
-}
-
-# ── sidebar: industrial scada controls ────────────────────────────────────────
-with st.sidebar:
-    st.markdown("""
-    <div style="padding:10px 0 16px; border-bottom:1px solid rgba(148, 163, 184, 0.12); margin-bottom:16px;">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <div style="background:#0284c7; width:26px; height:26px; border-radius:4px; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:14px; color:#fff;">DG</div>
-            <div>
-                <div style="font-size:1.05rem; font-weight:700; color:#f8fafc; letter-spacing:-0.3px;">DriftGuard</div>
-                <div style="font-size:0.68rem; color:#64748b; font-family:'JetBrains Mono',monospace;">v1.4.0 · SCADA ONLINE</div>
-            </div>
-        </div>
-        <div style="margin-top:12px; display:flex; align-items:center; gap:6px; background:#0b1120; padding:6px 8px; border-radius:4px; border:1px solid rgba(148,163,184,0.1);">
-            <span style="width:7px; height:7px; border-radius:50%; background:#10b981; display:inline-block; box-shadow:0 0 6px #10b981; animation:pulse-live 2s infinite;"></span>
-            <span style="font-size:0.68rem; color:#94a3b8; font-family:'JetBrains Mono',monospace; font-weight:600;">STREAM: AI4I 2020 REAL</span>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("<div style='font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;'>Drift Scenario</div>", unsafe_allow_html=True)
-    name = st.selectbox(
-        "scenario_sel",
-        list(SCENARIOS),
-        index=4,
-        format_func=lambda k: k,
-        label_visibility="collapsed"
-    )
-    
-    st.markdown(
-        f"<div style='font-size:0.72rem; color:#cbd5e1; margin:-4px 0 14px; padding:8px 10px; background:#131d33; border-radius:4px; border-left:3px solid #0ea5e9; line-height:1.4;'>"
-        f"{SCENARIOS[name].description}</div>",
-        unsafe_allow_html=True
-    )
-
-    st.markdown("<div style='font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;'>Simulation Seed</div>", unsafe_allow_html=True)
-    seed = st.number_input("seed_inp", 0, 99, 0, label_visibility="collapsed")
-
-    st.markdown("<div style='font-size:0.7rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:4px;'>Drift Onset Window</div>", unsafe_allow_html=True)
-    onset = st.slider("onset_sl", 6, 25, 12, label_visibility="collapsed")
-
-    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
-    run = st.button("RUN SCENARIO DIAGNOSTICS", type="primary")
-
-    st.markdown("""
-    <div style="margin-top:24px; padding-top:14px; border-top:1px solid rgba(148, 163, 184, 0.1);">
-        <div style="font-size:0.68rem; color:#64748b; font-family:'JetBrains Mono',monospace; line-height:1.6;">
-            <strong>INSTRUMENTATION:</strong><br>
-            • KS-test (Univariate)<br>
-            • PSI (Population Shift)<br>
-            • k-Means Cluster Error<br>
-            • Online Regression Repair<br>
-            • Harm-Gated Bootstrap
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
 
 # ── data caching & execution ──────────────────────────────────────────────────
 @st.cache_resource(show_spinner=False)
@@ -200,475 +136,50 @@ def simulate(name, seed, onset):
     weights = {k: float(v) for k, v in s_dg.weights.items()}
     return out, weights
 
-# ── html visualization builder ────────────────────────────────────────────────
-def _build_dashboard_html(windows, f1_series, composite, thr_vals,
-                          heatmap, onset, triage_rows, log_rows, weights,
-                          scenario_name, scenario_desc, expected_cause):
-    """Generates the professional industrial dashboard component."""
+# ── top navigation command bar ────────────────────────────────────────────────
+nav_col1, nav_col2, nav_col3, nav_col4 = st.columns([3, 4, 3, 2])
 
-    f1_json = json.dumps(f1_series)
-    comp_json = json.dumps(composite)
-    thr_json = json.dumps(thr_vals)
-    heat_json = json.dumps(heatmap)
-    triage_json = json.dumps(triage_rows)
-    log_json = json.dumps(log_rows)
-    weights_json = json.dumps(weights)
-    sensors_json = json.dumps(SENSORS)
-    strat_col_json = json.dumps(STRAT_COLOR)
-    cause_col_json = json.dumps(CAUSE_COLOR)
-
-    return f"""<!DOCTYPE html>
-<html>
-<head>
-<meta charset="utf-8">
-<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<style>
-  * {{ margin:0; padding:0; box-sizing:border-box; }}
-  body {{
-    background:#080d1a; color:#f1f5f9;
-    font-family:'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    padding:0 2px 20px;
-  }}
-  .mono {{ font-family:'JetBrains Mono', monospace; }}
-  
-  /* Top Telemetry Header */
-  .station-banner {{
-    background:#0e1629; border:1px solid rgba(148,163,184,0.12);
-    border-radius:8px; padding:12px 18px; margin-bottom:14px;
-    display:flex; justify-content:space-between; align-items:center;
-  }}
-  .station-tag {{
-    font-size:0.68rem; color:#64748b; font-weight:700;
-    letter-spacing:1px; text-transform:uppercase; margin-bottom:2px;
-  }}
-  .station-title {{
-    font-size:1.05rem; font-weight:700; color:#f8fafc; letter-spacing:-0.2px;
-  }}
-  .telemetry-strip {{
-    display:grid; grid-template-columns:repeat(5, 1fr); gap:10px; margin-bottom:14px;
-  }}
-  .telemetry-cell {{
-    background:#0d1527; border:1px solid rgba(148,163,184,0.1);
-    border-radius:6px; padding:9px 12px;
-  }}
-  .tele-label {{
-    font-size:0.64rem; color:#64748b; text-transform:uppercase; letter-spacing:0.8px; font-weight:700;
-  }}
-  .tele-val {{
-    font-size:1.1rem; font-weight:700; color:#38bdf8; margin:2px 0; font-family:'JetBrains Mono', monospace;
-  }}
-  .tele-sub {{
-    font-size:0.64rem; color:#475569; font-family:'JetBrains Mono', monospace;
-  }}
-
-  /* KPI Grid */
-  .kpi-grid {{
-    display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:14px;
-  }}
-  .kpi-card {{
-    background:#0e1629; border:1px solid rgba(148,163,184,0.12);
-    border-top:3px solid var(--accent); border-radius:8px; padding:12px 16px;
-    position:relative;
-  }}
-  .kpi-label {{
-    font-size:0.66rem; color:#94a3b8; font-weight:700;
-    text-transform:uppercase; letter-spacing:0.8px;
-  }}
-  .kpi-val {{
-    font-size:1.75rem; font-weight:800; color:var(--accent);
-    letter-spacing:-0.5px; margin:4px 0 2px; font-family:'JetBrains Mono', monospace;
-  }}
-  .kpi-meta {{
-    font-size:0.7rem; color:#64748b;
-  }}
-
-  /* Layout Grids */
-  .grid2 {{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px; }}
-  .panel {{
-    background:#0e1629; border:1px solid rgba(148,163,184,0.12);
-    border-radius:8px; padding:14px 16px;
-  }}
-  .panel-header {{
-    display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;
-  }}
-  .panel-title {{
-    font-size:0.72rem; font-weight:700; color:#94a3b8;
-    text-transform:uppercase; letter-spacing:0.8px;
-  }}
-  .panel-badge {{
-    font-size:0.62rem; font-family:'JetBrains Mono', monospace;
-    padding:2px 6px; border-radius:4px; background:#1e293b; color:#94a3b8;
-  }}
-  canvas {{ width:100%!important; }}
-
-  /* Tables & Lists */
-  table {{ width:100%; border-collapse:collapse; font-size:0.74rem; }}
-  th {{
-    color:#64748b; font-weight:700; text-transform:uppercase; font-size:0.62rem;
-    letter-spacing:0.8px; padding:6px 8px; border-bottom:1px solid rgba(148,163,184,0.1); text-align:left;
-  }}
-  td {{
-    padding:6px 8px; border-bottom:1px solid rgba(148,163,184,0.06); vertical-align:middle;
-  }}
-  tr:hover td {{ background:rgba(255,255,255,0.015); }}
-  .pill {{
-    display:inline-block; padding:2px 7px; border-radius:4px;
-    font-size:0.65rem; font-weight:700; font-family:'JetBrains Mono', monospace;
-  }}
-
-  /* Alarm Log */
-  .log-item {{
-    display:flex; align-items:flex-start; gap:8px; padding:6px 0;
-    border-bottom:1px solid rgba(148,163,184,0.06);
-  }}
-  .log-tag {{
-    font-size:0.62rem; font-weight:700; font-family:'JetBrains Mono', monospace;
-    padding:1px 5px; border-radius:3px; min-width:65px; text-align:center;
-  }}
-  .log-desc {{
-    font-size:0.7rem; color:#94a3b8; line-height:1.4;
-  }}
-  .bar-bg {{
-    background:#17223b; border-radius:3px; height:5px; margin-top:3px; overflow:hidden;
-  }}
-  .bar-fill {{
-    height:100%; border-radius:3px; background:#0284c7;
-  }}
-</style>
-</head>
-<body>
-
-<!-- Station & Scenario Overview Banner -->
-<div class="station-banner">
-  <div>
-    <div class="station-tag">FACILITY CELL 04 // AI4I 2020 4-AXIS MILLING SYSTEM</div>
-    <div class="station-title">
-      <span style="color:#0ea5e9;">SCENARIO ACTIVE:</span> {scenario_name}
+with nav_col1:
+    st.markdown("""
+    <div style="display:flex; align-items:center; gap:10px; padding-top:4px;">
+        <div style="width:34px; height:34px; border-radius:10px; background:linear-gradient(135deg,#06b6d4,#6366f1); display:flex; align-items:center; justify-content:center; box-shadow:0 0 16px rgba(6,182,212,0.4);">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div>
+            <div style="font-size:1.1rem; font-weight:800; letter-spacing:-0.5px; color:#f8fafc;">DriftGuard</div>
+            <div style="font-size:0.68rem; color:#94a3b8; font-family:'JetBrains Mono',monospace;">AI4I 2020 · PRODUCTION</div>
+        </div>
     </div>
-    <div style="font-size:0.72rem; color:#64748b; margin-top:3px;">
-      Target Ground Truth: <strong style="color:#f1f5f9;">{expected_cause}</strong> · {scenario_desc}
-    </div>
-  </div>
-  <div style="text-align:right;">
-    <div class="station-tag">DETECTION PIPELINE</div>
-    <div class="panel-badge" style="background:#022c22; color:#34d399; border:1px solid #059669;">
-      ONLINE SELF-REPAIR + GUARDED RETRAINING
-    </div>
-  </div>
-</div>
+    """, unsafe_allow_html=True)
 
-<!-- Real Factory Sensor Telemetry Strip -->
-<div class="telemetry-strip">
-  <div class="telemetry-cell">
-    <div class="tele-label">Air Temperature</div>
-    <div class="tele-val">298.2 <span style="font-size:0.7rem; color:#64748b;">K</span></div>
-    <div class="tele-sub">25.1 °C · Baseline Normal</div>
-  </div>
-  <div class="telemetry-cell">
-    <div class="tele-label">Process Temperature</div>
-    <div class="tele-val">308.4 <span style="font-size:0.7rem; color:#64748b;">K</span></div>
-    <div class="tele-sub">ΔT = 10.2 K · Heat Balance OK</div>
-  </div>
-  <div class="telemetry-cell">
-    <div class="tele-label">Rotational Speed</div>
-    <div class="tele-val">1,551 <span style="font-size:0.7rem; color:#64748b;">RPM</span></div>
-    <div class="tele-sub">Range 1200 - 2800 RPM</div>
-  </div>
-  <div class="telemetry-cell">
-    <div class="tele-label">Spindle Torque</div>
-    <div class="tele-val">42.8 <span style="font-size:0.7rem; color:#64748b;">N·m</span></div>
-    <div class="tele-sub">Load Factor: 42.8%</div>
-  </div>
-  <div class="telemetry-cell">
-    <div class="tele-label">Cumulative Tool Wear</div>
-    <div class="tele-val">105 <span style="font-size:0.7rem; color:#64748b;">min</span></div>
-    <div class="tele-sub">Limit: 200 min (Healthy)</div>
-  </div>
-</div>
+with nav_col2:
+    st.markdown("<div style='font-size:0.68rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:2px;'>Simulated Scenario</div>", unsafe_allow_html=True)
+    name = st.selectbox(
+        "scenario_select",
+        list(SCENARIOS),
+        index=4,
+        format_func=lambda k: k,
+        label_visibility="collapsed"
+    )
 
-<!-- Primary KPIs -->
-<div class="kpi-grid" id="kpis"></div>
+with nav_col3:
+    st.markdown("<div style='font-size:0.68rem; color:#94a3b8; font-weight:700; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:2px;'>Drift Onset Window</div>", unsafe_allow_html=True)
+    onset = st.slider("onset_slider", 6, 25, 12, label_visibility="collapsed")
 
-<!-- Chart Row 1: Performance & Drift Score -->
-<div class="grid2">
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Model Reliability (F1 Score per 500-Sample Window)</div>
-      <div class="panel-badge">CHALLENGER VS CHAMPION</div>
-    </div>
-    <canvas id="f1Chart" height="175"></canvas>
-  </div>
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Multivariate Drift vs. Bootstrap Null Threshold</div>
-      <div class="panel-badge">LOG SCALE (KS + PSI + K-MEANS)</div>
-    </div>
-    <canvas id="driftChart" height="175"></canvas>
-  </div>
-</div>
+with nav_col4:
+    st.markdown("<div style='height:16px;'></div>", unsafe_allow_html=True)
+    run = st.button("⚡ Run Pipeline", type="primary")
 
-<!-- Chart Row 2: Per-Sensor Breakdown & Root-Cause Triage -->
-<div class="grid2">
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Per-Sensor Drift Factor (Multiples of Threshold)</div>
-      <div class="panel-badge">UNIVARIATE RESIDUALS</div>
-    </div>
-    <canvas id="sensorChart" height="180"></canvas>
-  </div>
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Root-Cause Triage Journal</div>
-      <div class="panel-badge">CAUSE CLASSIFICATION</div>
-    </div>
-    <div id="triageTable" style="max-height:190px; overflow-y:auto;"></div>
-  </div>
-</div>
+seed = 0
 
-<!-- Row 3: Industrial Alarm Console & Feature Weights -->
-<div class="grid2">
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">System Action & Audit Trail</div>
-      <div class="panel-badge">DCS EVENT LOG</div>
-    </div>
-    <div id="alarmLog" style="max-height:180px; overflow-y:auto;"></div>
-  </div>
-  <div class="panel">
-    <div class="panel-header">
-      <div class="panel-title">Random Forest Sensor Feature Importance</div>
-      <div class="panel-badge">PERMUTATION IMPORTANCE</div>
-    </div>
-    <div id="weightsList"></div>
-  </div>
-</div>
-
-<script>
-// Data Ingestion
-const WINS = {json.dumps(windows)};
-const F1S = {f1_json};
-const COMP = {comp_json};
-const THR = {thr_json};
-const HEAT = {heat_json};
-const ONSET = {onset};
-const TRIAGE = {triage_json};
-const LOG = {log_json};
-const WEIGHTS = {weights_json};
-const SENSORS = {sensors_json};
-const STRAT_C = {strat_col_json};
-const CAUSE_C = {cause_col_json};
-
-// Typography & Defaults
-Chart.defaults.font = {{ family:"'Inter', sans-serif", size:10 }};
-Chart.defaults.color = '#64748b';
-const gridStyle = {{ color:'rgba(148, 163, 184, 0.08)' }};
-const tickStyle = {{ color:'#64748b', font:{{size:9, family:"'JetBrains Mono', monospace"}} }};
-
-// Compute KPI Metrics
-const dgAfter = F1S["DriftGuard"].slice(ONSET);
-const stAfter = F1S["Static model"].slice(ONSET);
-const dgMean = dgAfter.reduce((a,b)=>a+b, 0) / dgAfter.length;
-const stMean = stAfter.reduce((a,b)=>a+b, 0) / stAfter.length;
-const delta = dgMean - stMean;
-const deploys = LOG.filter(e => e.event === "DEPLOY").length;
-const alertCount = TRIAGE.filter(r => r.w >= ONSET).length;
-const falseAlarms = TRIAGE.filter(r => r.w < ONSET).length;
-
-function renderKpi(label, val, meta, color) {{
-  return `<div class="kpi-card" style="--accent:${{color}}">
-    <div class="kpi-label">${{label}}</div>
-    <div class="kpi-val">${{val}}</div>
-    <div class="kpi-meta">${{meta}}</div>
-  </div>`;
-}}
-
-document.getElementById('kpis').innerHTML =
-  renderKpi("DriftGuard Post-Onset F1", dgMean.toFixed(3), `+${{delta.toFixed(3)}} vs Static Unmonitored`, "#10b981") +
-  renderKpi("Static Baseline F1", stMean.toFixed(3), "No online drift mitigation", "#64748b") +
-  renderKpi("Challenger Retrains", deploys.toString(), "Bootstrap validated deployments", "#0ea5e9") +
-  renderKpi("Drift Alarms Triaged", alertCount.toString(), `${{falseAlarms}} false alarms pre-onset`, "#f59e0b");
-
-// Onset Line Plugin
-const onsetAnnotation = {{
-  id: 'onsetMarker',
-  afterDraw(chart) {{
-    const {{ctx, chartArea:{{top, bottom}}, scales:{{x}}}} = chart;
-    const px = x.getPixelForValue(ONSET);
-    ctx.save();
-    ctx.setLineDash([4, 3]);
-    ctx.strokeStyle = '#f43f5e';
-    ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = '#f43f5e';
-    ctx.font = '600 9px "JetBrains Mono", monospace';
-    ctx.fillText('FAULT ONSET', px + 4, top + 12);
-    ctx.restore();
-  }}
-}};
-
-// 1. F1 Chart
-new Chart(document.getElementById('f1Chart'), {{
-  type:'line',
-  data: {{
-    labels: WINS,
-    datasets: Object.entries(F1S).map(([name, vals]) => ({{
-      label: name,
-      data: vals,
-      borderColor: STRAT_C[name] || '#64748b',
-      borderWidth: name === 'DriftGuard' ? 2.5 : 1.5,
-      pointRadius: 0,
-      pointHoverRadius: 4,
-      tension: 0.2
-    }}))
-  }},
-  options: {{
-    responsive: true,
-    interaction: {{ mode:'index', intersect:false }},
-    plugins: {{
-      legend: {{ labels: {{ color:'#94a3b8', font:{{size:9}}, boxWidth:10 }} }},
-      tooltip: {{
-        backgroundColor:'#0e1629', borderColor:'rgba(148,163,184,0.2)', borderWidth:1,
-        titleColor:'#94a3b8', bodyColor:'#f8fafc',
-        callbacks: {{ label: c => `${{c.dataset.label}}: ${{c.parsed.y.toFixed(3)}}` }}
-      }}
-    }},
-    scales: {{
-      x: {{ grid: gridStyle, ticks: {{ ...tickStyle, maxTicksLimit:10 }}, title:{{display:true, text:'Streaming Window (500 samples/win)', color:'#64748b', font:{{size:9}}}} }},
-      y: {{ grid: gridStyle, ticks: tickStyle, min:0, max:1, title:{{display:true, text:'F1 Reliability Score', color:'#64748b', font:{{size:9}}}} }}
-    }}
-  }},
-  plugins: [onsetAnnotation]
-}});
-
-// 2. Drift Score Chart
-new Chart(document.getElementById('driftChart'), {{
-  type:'line',
-  data: {{
-    labels: WINS,
-    datasets: [
-      {{ label:'Composite Shift Score', data:COMP, borderColor:'#0ea5e9', backgroundColor:'rgba(14,165,233,0.06)', borderWidth:2, fill:true, pointRadius:0, tension:0.2 }},
-      {{ label:'Bootstrap Calibrated Threshold', data:THR, borderColor:'#f59e0b', borderDash:[5,4], borderWidth:1.5, pointRadius:0 }}
-    ]
-  }},
-  options: {{
-    responsive: true,
-    interaction: {{ mode:'index', intersect:false }},
-    plugins: {{
-      legend: {{ labels: {{ color:'#94a3b8', font:{{size:9}}, boxWidth:10 }} }},
-      tooltip: {{ backgroundColor:'#0e1629', borderColor:'rgba(148,163,184,0.2)', borderWidth:1, titleColor:'#94a3b8', bodyColor:'#f8fafc' }}
-    }},
-    scales: {{
-      x: {{ grid: gridStyle, ticks: {{ ...tickStyle, maxTicksLimit:10 }}, title:{{display:true, text:'Streaming Window', color:'#64748b', font:{{size:9}}}} }},
-      y: {{ type:'logarithmic', grid: gridStyle, ticks: tickStyle, title:{{display:true, text:'Residual Metric (Log Scale)', color:'#64748b', font:{{size:9}}}} }}
-    }}
-  }},
-  plugins: [onsetAnnotation]
-}});
-
-// 3. Per-Sensor Chart
-const barColors = ['#0ea5e9', '#10b981', '#f59e0b', '#f43f5e', '#a855f7'];
-new Chart(document.getElementById('sensorChart'), {{
-  type:'bar',
-  data: {{
-    labels: WINS,
-    datasets: SENSORS.map((s, i) => ({{
-      label: s,
-      data: HEAT[s].map(v => Math.min(v, 5)),
-      backgroundColor: barColors[i] + '99',
-      borderWidth: 0,
-      barPercentage: 1,
-      categoryPercentage: 1
-    }}))
-  }},
-  options: {{
-    responsive: true,
-    interaction: {{ mode:'index', intersect:false }},
-    plugins: {{
-      legend: {{ labels: {{ color:'#94a3b8', font:{{size:9}}, boxWidth:10 }} }},
-      tooltip: {{
-        backgroundColor:'#0e1629', borderColor:'rgba(148,163,184,0.2)', borderWidth:1,
-        titleColor:'#94a3b8', bodyColor:'#f8fafc',
-        callbacks: {{ label: c => `${{c.dataset.label}}: ${{c.parsed.y.toFixed(2)}}x thr` }}
-      }}
-    }},
-    scales: {{
-      x: {{ grid: gridStyle, ticks: {{ ...tickStyle, maxTicksLimit:10 }}, title:{{display:true, text:'Streaming Window', color:'#64748b', font:{{size:9}}}} }},
-      y: {{ grid: gridStyle, ticks: tickStyle, min:0, title:{{display:true, text:'Multiples of Threshold', color:'#64748b', font:{{size:9}}}} }}
-    }}
-  }},
-  plugins: [onsetAnnotation]
-}});
-
-// 4. Triage Table
-const triageEl = document.getElementById('triageTable');
-triageEl.innerHTML = TRIAGE.length === 0
-  ? '<div style="color:#64748b; font-size:0.75rem; padding:20px; text-align:center;">No anomalies registered across windows.</div>'
-  : `<table>
-      <tr><th>Window</th><th>Diagnosed Cause</th><th>Shift Impact</th><th>Active Model</th></tr>
-      ${{TRIAGE.slice(0, 16).map(r => {{
-        const c = CAUSE_C[r.cause] || '#64748b';
-        return `<tr>
-          <td class="mono" style="color:#94a3b8;">W#${{r.w}}</td>
-          <td><span class="pill" style="background:${{c}}20; color:${{c}}; border:1px solid ${{c}}44;">${{r.cause}}</span></td>
-          <td>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <div class="bar-bg" style="width:50px;"><div class="bar-fill" style="width:${{Math.min(r.impact * 100, 100)}}%;"></div></div>
-              <span class="mono" style="font-size:0.68rem; color:#64748b;">${{r.impact.toFixed(2)}}</span>
-            </div>
-          </td>
-          <td class="mono" style="color:#64748b;">Mdl-v${{r.v}}</td>
-        </tr>`;
-      }}).join('')}}
-    </table>`;
-
-// 5. Alarm Log
-const logEl = document.getElementById('alarmLog');
-const badgeStyle = {{
-  ALERT: 'background:#f43f5e22; color:#f43f5e; border:1px solid #f43f5e44;',
-  LABEL_ALARM: 'background:#f9731622; color:#f97316; border:1px solid #f9731644;',
-  DEPLOY: 'background:#10b98122; color:#10b981; border:1px solid #10b98144;',
-  HARMLESS: 'background:#0284c722; color:#38bdf8; border:1px solid #0284c744;',
-  REJECT: 'background:#334155; color:#94a3b8;',
-}};
-
-logEl.innerHTML = LOG.length === 0
-  ? '<div style="color:#64748b; font-size:0.75rem; padding:20px; text-align:center;">No system events recorded.</div>'
-  : LOG.map(e => `
-    <div class="log-item">
-      <span class="log-tag" style="${{badgeStyle[e.event] || 'background:#334155; color:#94a3b8;'}}">${{e.event}}</span>
-      <div style="flex:1;">
-        <span class="mono" style="font-size:0.65rem; color:#64748b; margin-right:6px;">[W#${{e.w}}]</span>
-        <span class="log-desc">${{e.msg}}</span>
-      </div>
-    </div>`).join('');
-
-// 6. Sensor Weights
-const maxWeight = Math.max(...Object.values(WEIGHTS));
-document.getElementById('weightsList').innerHTML = Object.entries(WEIGHTS).map(([s, v]) => `
-  <div style="margin-bottom:8px;">
-    <div style="display:flex; justify-content:space-between; margin-bottom:2px;">
-      <span class="mono" style="font-size:0.7rem; color:#94a3b8;">${{s}}</span>
-      <span class="mono" style="font-size:0.68rem; color:#64748b;">${{(v * 100).toFixed(1)}}%</span>
-    </div>
-    <div class="bar-bg"><div class="bar-fill" style="width:${{(v / maxWeight * 100).toFixed(1)}}%;"></div></div>
-  </div>`).join('');
-</script>
-</body>
-</html>"""
-
-# ── main execution: automatically ready on load ──────────────────────────────
-# Ensure state is initialized so user lands directly into the working plant monitor
-if "dg_done" not in st.session_state:
-    st.session_state["dg_done"] = True
-
-with st.spinner("Processing streaming sensor windows..."):
+# ── execute simulation ────────────────────────────────────────────────────────
+with st.spinner("Streaming real AI4I cycles..."):
     res, weights = simulate(name, seed, onset)
 
 dg_reps = res["DriftGuard"]["reps"]
 sc = SCENARIOS[name]
 
-# Prepare datasets for dashboard visualization
+# Prepare datasets
 windows = list(range(40))
 composite = [r["composite"] for r in dg_reps]
 thr_vals = [r["thr"] for r in dg_reps]
@@ -683,11 +194,436 @@ log_rows = [
     for w, ev, msg in res["DriftGuard"]["log"]
 ]
 
-dashboard_html = _build_dashboard_html(
+# ── linear / vercel full-width html component ─────────────────────────────────
+def _build_linear_saas_html(windows, f1_series, composite, thr_vals,
+                            heatmap, onset, triage_rows, log_rows, weights,
+                            scenario_name, scenario_desc, expected_cause):
+
+    f1_json = json.dumps(f1_series)
+    comp_json = json.dumps(composite)
+    thr_json = json.dumps(thr_vals)
+    heat_json = json.dumps(heatmap)
+    triage_json = json.dumps(triage_rows)
+    log_json = json.dumps(log_rows)
+    weights_json = json.dumps(weights)
+    sensors_json = json.dumps(SENSORS)
+
+    return f"""<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+  * {{ margin:0; padding:0; box-sizing:border-box; }}
+  body {{
+    background:#030712; color:#f8fafc;
+    font-family:'Plus Jakarta Sans', -apple-system, sans-serif;
+    padding:0 2px 30px;
+  }}
+  .mono {{ font-family:'JetBrains Mono', monospace; }}
+
+  /* Scenario Info Banner */
+  .scenario-pill-bar {{
+    background:rgba(255, 255, 255, 0.02);
+    border:1px solid rgba(255, 255, 255, 0.07);
+    border-radius:12px; padding:10px 16px; margin-bottom:18px;
+    display:flex; justify-content:space-between; align-items:center;
+  }}
+  .badge-cause {{
+    padding:4px 10px; border-radius:20px; font-size:0.72rem; font-weight:700;
+    letter-spacing:0.4px; font-family:'JetBrains Mono', monospace;
+  }}
+
+  /* 3 Hero Metric Cards */
+  .hero-grid {{
+    display:grid; grid-template-columns:repeat(3, 1fr); gap:16px; margin-bottom:20px;
+  }}
+  .hero-card {{
+    background:linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.4) 100%);
+    border:1px solid rgba(255, 255, 255, 0.08);
+    border-radius:16px; padding:20px 24px; position:relative; overflow:hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.25);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }}
+  .hero-card:hover {{
+    border-color: rgba(6, 182, 212, 0.3);
+    transform: translateY(-2px);
+  }}
+  .hero-glow {{
+    position:absolute; top:-20px; right:-20px; width:100px; height:100px;
+    background:radial-gradient(circle, var(--glow-color, rgba(6,182,212,0.15)) 0%, transparent 70%);
+    pointer-events:none;
+  }}
+  .hero-title {{
+    font-size:0.75rem; color:#94a3b8; font-weight:600; letter-spacing:0.5px; text-transform:uppercase;
+  }}
+  .hero-num {{
+    font-size:2.4rem; font-weight:800; letter-spacing:-1px; margin:6px 0; color:#f8fafc;
+  }}
+  .hero-foot {{
+    display:flex; align-items:center; gap:8px; font-size:0.75rem; color:#64748b;
+  }}
+  .diff-badge {{
+    padding:2px 8px; border-radius:6px; font-weight:700; font-size:0.72rem;
+    font-family:'JetBrains Mono', monospace;
+  }}
+
+  /* Charts Grid */
+  .charts-grid {{
+    display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:20px;
+  }}
+  .chart-card {{
+    background:rgba(15, 23, 42, 0.55);
+    border:1px solid rgba(255, 255, 255, 0.08);
+    border-radius:16px; padding:20px 22px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  }}
+  .chart-head {{
+    display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;
+  }}
+  .chart-title {{
+    font-size:0.88rem; font-weight:700; color:#f1f5f9; letter-spacing:-0.2px;
+  }}
+  .chart-tag {{
+    font-size:0.65rem; color:#64748b; font-family:'JetBrains Mono', monospace;
+    background:rgba(255,255,255,0.04); padding:3px 8px; border-radius:6px;
+  }}
+  canvas {{ width:100%!important; }}
+
+  /* Feed & Diagnostics Grid */
+  .feed-grid {{
+    display:grid; grid-template-columns:1.4fr 1fr; gap:16px;
+  }}
+  .feed-card {{
+    background:rgba(15, 23, 42, 0.55);
+    border:1px solid rgba(255, 255, 255, 0.08);
+    border-radius:16px; padding:20px 22px;
+  }}
+  .feed-item {{
+    display:flex; align-items:flex-start; gap:12px; padding:10px 0;
+    border-bottom:1px solid rgba(255, 255, 255, 0.05);
+  }}
+  .feed-dot {{
+    width:8px; height:8px; border-radius:50%; margin-top:6px; flex-shrink:0;
+  }}
+  .feed-tag {{
+    font-size:0.66rem; font-weight:700; font-family:'JetBrains Mono', monospace;
+    padding:2px 7px; border-radius:4px;
+  }}
+  .feed-text {{
+    font-size:0.75rem; color:#cbd5e1; line-height:1.45;
+  }}
+  .weight-bar {{
+    background:rgba(255,255,255,0.04); border-radius:4px; height:6px; margin-top:4px; overflow:hidden;
+  }}
+  .weight-fill {{
+    height:100%; border-radius:4px; background:linear-gradient(90deg, #06b6d4, #6366f1);
+  }}
+</style>
+</head>
+<body>
+
+<!-- Active Scenario Bar -->
+<div class="scenario-pill-bar">
+  <div style="display:flex; align-items:center; gap:12px;">
+    <span style="font-size:0.78rem; color:#94a3b8; font-weight:600;">ACTIVE FAULT INJECTION:</span>
+    <span style="font-size:0.88rem; font-weight:700; color:#38bdf8;">{scenario_name}</span>
+    <span style="font-size:0.75rem; color:#64748b;">— {scenario_desc}</span>
+  </div>
+  <div>
+    <span class="badge-cause" id="targetBadge">EXPECTED: {expected_cause}</span>
+  </div>
+</div>
+
+<!-- 3 Hero KPI Cards -->
+<div class="hero-grid" id="heroGrid"></div>
+
+<!-- Middle Section: 2 Charts -->
+<div class="charts-grid">
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title">Model Reliability (F1 Score per Window)</div>
+      <div class="chart-tag">STREAMING PERFORMANCE</div>
+    </div>
+    <canvas id="f1Canvas" height="190"></canvas>
+  </div>
+  <div class="chart-card">
+    <div class="chart-head">
+      <div class="chart-title">Multivariate Drift vs. Bootstrap Null Threshold</div>
+      <div class="chart-tag">KS + PSI + K-MEANS ERROR</div>
+    </div>
+    <canvas id="driftCanvas" height="190"></canvas>
+  </div>
+</div>
+
+<!-- Bottom Section: Incident & Triage Feed + Sensor Weights -->
+<div class="feed-grid">
+  <div class="feed-card">
+    <div class="chart-head">
+      <div class="chart-title">Incident & Automated Action Journal</div>
+      <div class="chart-tag">ROOT-CAUSE TRIAGE</div>
+    </div>
+    <div id="feedList" style="max-height:220px; overflow-y:auto;"></div>
+  </div>
+  <div class="feed-card">
+    <div class="chart-head">
+      <div class="chart-title">Sensor Permutation Feature Importance</div>
+      <div class="chart-tag">RANDOM FOREST ATTRIBUTION</div>
+    </div>
+    <div id="weightsFeed"></div>
+  </div>
+</div>
+
+<script>
+const WINS = {json.dumps(windows)};
+const F1S = {f1_json};
+const COMP = {comp_json};
+const THR = {thr_json};
+const ONSET = {onset};
+const TRIAGE = {triage_json};
+const LOG = {log_json};
+const WEIGHTS = {weights_json};
+const SENSORS = {sensors_json};
+const EXPECTED_CAUSE = "{expected_cause}";
+
+// Setup Badge Color
+const causeColors = {{
+  "SENSOR_FAULT": {{ bg:"rgba(244,63,94,0.15)", text:"#f43f5e", border:"rgba(244,63,94,0.3)" }},
+  "REGIME_SHIFT": {{ bg:"rgba(245,158,11,0.15)", text:"#f59e0b", border:"rgba(245,158,11,0.3)" }},
+  "CONCEPT_DRIFT": {{ bg:"rgba(249,115,22,0.15)", text:"#f97316", border:"rgba(249,115,22,0.3)" }},
+  "FLEET_AGING": {{ bg:"rgba(168,85,247,0.15)", text:"#a855f7", border:"rgba(168,85,247,0.3)" }},
+  "NONE": {{ bg:"rgba(148,163,184,0.15)", text:"#94a3b8", border:"rgba(148,163,184,0.3)" }}
+}};
+const cc = causeColors[EXPECTED_CAUSE] || causeColors["NONE"];
+const tBadge = document.getElementById("targetBadge");
+tBadge.style.background = cc.bg;
+tBadge.style.color = cc.text;
+tBadge.style.border = "1px solid " + cc.border;
+
+// Hero Metrics Calculation
+const dgAfter = F1S["DriftGuard"].slice(ONSET);
+const stAfter = F1S["Static model"].slice(ONSET);
+const dgMean = dgAfter.reduce((a,b)=>a+b, 0) / dgAfter.length;
+const stMean = stAfter.reduce((a,b)=>a+b, 0) / stAfter.length;
+const delta = dgMean - stMean;
+const deploys = LOG.filter(e => e.event === "DEPLOY").length;
+const isFault = EXPECTED_CAUSE === "SENSOR_FAULT";
+
+document.getElementById('heroGrid').innerHTML = `
+  <div class="hero-card" style="--glow-color:rgba(16,185,129,0.2);">
+    <div class="hero-glow"></div>
+    <div class="hero-title">DriftGuard Reliability</div>
+    <div class="hero-num" style="color:#10b981;">${{dgMean.toFixed(3)}}</div>
+    <div class="hero-foot">
+      <span class="diff-badge" style="background:rgba(16,185,129,0.15); color:#10b981;">
+        ${{delta >= 0 ? '+' : ''}}${{delta.toFixed(3)}} vs Static (${{stMean.toFixed(3)}})
+      </span>
+      <span>Post-Onset Mean F1</span>
+    </div>
+  </div>
+
+  <div class="hero-card" style="--glow-color:rgba(6,182,212,0.2);">
+    <div class="hero-glow"></div>
+    <div class="hero-title">Challenger Deployments</div>
+    <div class="hero-num" style="color:#38bdf8;">${{deploys}}</div>
+    <div class="hero-foot">
+      <span class="diff-badge" style="background:rgba(6,182,212,0.15); color:#38bdf8;">
+        ${{isFault ? 'Zero Retrains (Repaired Online)' : 'Harm-Gated Retrains'}}
+      </span>
+      <span>Bootstrap Validated</span>
+    </div>
+  </div>
+
+  <div class="hero-card" style="--glow-color:${{cc.text}}33;">
+    <div class="hero-glow"></div>
+    <div class="hero-title">Diagnosed Cause</div>
+    <div class="hero-num" style="color:${{cc.text}}; font-size:1.85rem; padding-top:4px;">${{EXPECTED_CAUSE}}</div>
+    <div class="hero-foot">
+      <span class="diff-badge" style="background:${{cc.bg}}; color:${{cc.text}};">
+        ${{isFault ? 'ONLINE VIRTUAL REPAIR' : 'PHYSICAL SHIFT'}}
+      </span>
+      <span>Automated Triage</span>
+    </div>
+  </div>
+`;
+
+// Chart.js Shared Config
+Chart.defaults.font = {{ family:"'Plus Jakarta Sans', sans-serif", size:10 }};
+Chart.defaults.color = '#64748b';
+const gridOptions = {{ color:'rgba(255, 255, 255, 0.04)' }};
+const tickOptions = {{ color:'#64748b', font:{{size:9, family:"'JetBrains Mono', monospace"}} }};
+
+// Onset Marker
+const onsetPlugin = {{
+  id: 'onsetLine',
+  afterDraw(chart) {{
+    const {{ctx, chartArea:{{top, bottom}}, scales:{{x}}}} = chart;
+    const px = x.getPixelForValue(ONSET);
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = '#f43f5e';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(px, top); ctx.lineTo(px, bottom); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = '#f43f5e';
+    ctx.font = '600 9px "JetBrains Mono", monospace';
+    ctx.fillText('DRIFT ONSET', px + 5, top + 12);
+    ctx.restore();
+  }}
+}};
+
+// 1. F1 Chart with Glowing Gradient
+const ctx1 = document.getElementById('f1Canvas').getContext('2d');
+const dgGradient = ctx1.createLinearGradient(0, 0, 0, 200);
+dgGradient.addColorStop(0, 'rgba(16, 185, 129, 0.25)');
+dgGradient.addColorStop(1, 'rgba(16, 185, 129, 0.0)');
+
+new Chart(ctx1, {{
+  type:'line',
+  data: {{
+    labels: WINS,
+    datasets: [
+      {{
+        label: 'DriftGuard',
+        data: F1S['DriftGuard'],
+        borderColor: '#10b981',
+        backgroundColor: dgGradient,
+        fill: true,
+        borderWidth: 2.5,
+        pointRadius: 0,
+        pointHoverRadius: 4,
+        tension: 0.35
+      }},
+      {{
+        label: 'Static Baseline',
+        data: F1S['Static model'],
+        borderColor: '#64748b',
+        borderWidth: 1.5,
+        borderDash: [3, 3],
+        pointRadius: 0,
+        tension: 0.35
+      }},
+      {{
+        label: 'Naive Retrain',
+        data: F1S['Naive drift->retrain'],
+        borderColor: '#f59e0b',
+        borderWidth: 1.2,
+        pointRadius: 0,
+        tension: 0.35
+      }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    interaction: {{ mode:'index', intersect:false }},
+    plugins: {{
+      legend: {{ labels: {{ color:'#94a3b8', font:{{size:9}}, boxWidth:10 }} }},
+      tooltip: {{
+        backgroundColor:'#0f172a', borderColor:'rgba(255,255,255,0.1)', borderWidth:1,
+        titleColor:'#94a3b8', bodyColor:'#f8fafc',
+        callbacks: {{ label: c => `${{c.dataset.label}}: ${{c.parsed.y.toFixed(3)}}` }}
+      }}
+    }},
+    scales: {{
+      x: {{ grid: gridOptions, ticks: tickOptions }},
+      y: {{ grid: gridOptions, ticks: tickOptions, min:0, max:1 }}
+    }}
+  }},
+  plugins: [onsetPlugin]
+}});
+
+// 2. Drift Score Chart
+const ctx2 = document.getElementById('driftCanvas').getContext('2d');
+const driftGradient = ctx2.createLinearGradient(0, 0, 0, 200);
+driftGradient.addColorStop(0, 'rgba(6, 182, 212, 0.3)');
+driftGradient.addColorStop(1, 'rgba(6, 182, 212, 0.0)');
+
+new Chart(ctx2, {{
+  type:'line',
+  data: {{
+    labels: WINS,
+    datasets: [
+      {{
+        label: 'Composite Shift Score',
+        data: COMP,
+        borderColor: '#06b6d4',
+        backgroundColor: driftGradient,
+        fill: true,
+        borderWidth: 2,
+        pointRadius: 0,
+        tension: 0.35
+      }},
+      {{
+        label: 'Null Threshold',
+        data: THR,
+        borderColor: '#f59e0b',
+        borderDash: [5, 4],
+        borderWidth: 1.5,
+        pointRadius: 0
+      }}
+    ]
+  }},
+  options: {{
+    responsive: true,
+    interaction: {{ mode:'index', intersect:false }},
+    plugins: {{
+      legend: {{ labels: {{ color:'#94a3b8', font:{{size:9}}, boxWidth:10 }} }},
+      tooltip: {{ backgroundColor:'#0f172a', borderColor:'rgba(255,255,255,0.1)', borderWidth:1 }}
+    }},
+    scales: {{
+      x: {{ grid: gridOptions, ticks: tickOptions }},
+      y: {{ type:'logarithmic', grid: gridOptions, ticks: tickOptions }}
+    }}
+  }},
+  plugins: [onsetPlugin]
+}});
+
+// 3. Incident Journal
+const feedEl = document.getElementById('feedList');
+const eventMeta = {{
+  ALERT: {{ bg:"rgba(244,63,94,0.15)", text:"#f43f5e", dot:"#f43f5e" }},
+  LABEL_ALARM: {{ bg:"rgba(249,115,22,0.15)", text:"#f97316", dot:"#f97316" }},
+  DEPLOY: {{ bg:"rgba(16,185,129,0.15)", text:"#10b981", dot:"#10b981" }},
+  HARMLESS: {{ bg:"rgba(6,182,212,0.15)", text:"#06b6d4", dot:"#06b6d4" }},
+  REJECT: {{ bg:"rgba(148,163,184,0.15)", text:"#94a3b8", dot:"#94a3b8" }}
+}};
+
+feedEl.innerHTML = LOG.length === 0
+  ? '<div style="color:#64748b; font-size:0.75rem; padding:20px; text-align:center;">No automated incidents registered. System healthy.</div>'
+  : LOG.map(e => {{
+      const meta = eventMeta[e.event] || eventMeta["REJECT"];
+      return `
+        <div class="feed-item">
+          <div class="feed-dot" style="background:${{meta.dot}}; box-shadow:0 0 6px ${{meta.dot}}88;"></div>
+          <div style="flex:1;">
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:2px;">
+              <span class="feed-tag" style="background:${{meta.bg}}; color:${{meta.text}};">${{e.event}}</span>
+              <span class="mono" style="font-size:0.65rem; color:#64748b;">Window #${{e.w}}</span>
+            </div>
+            <div class="feed-text">${{e.msg}}</div>
+          </div>
+        </div>`;
+    }}).join('');
+
+// 4. Feature Weights Feed
+const maxWeight = Math.max(...Object.values(WEIGHTS));
+document.getElementById('weightsFeed').innerHTML = Object.entries(WEIGHTS).map(([s, v]) => `
+  <div style="margin-bottom:12px;">
+    <div style="display:flex; justify-content:space-between; margin-bottom:3px;">
+      <span class="mono" style="font-size:0.75rem; color:#e2e8f0; font-weight:600;">${{s}}</span>
+      <span class="mono" style="font-size:0.72rem; color:#64748b;">${{(v * 100).toFixed(1)}}%</span>
+    </div>
+    <div class="weight-bar"><div class="weight-fill" style="width:${{(v / maxWeight * 100).toFixed(1)}}%;"></div></div>
+  </div>`).join('');
+
+</script>
+</body>
+</html>"""
+
+# Render Component
+dashboard_html = _build_linear_saas_html(
     windows, f1_series, composite, thr_vals,
     heatmap, onset, triage_rows, log_rows, weights,
     name, sc.description, sc.expected_cause
 )
-
-# Render professional industrial dashboard
-components.html(dashboard_html, height=1050, scrolling=False)
+components.html(dashboard_html, height=840, scrolling=False)

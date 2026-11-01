@@ -23,7 +23,9 @@ def via_ucimlrepo():
 
 def via_url():
     import pandas as pd
-    raw = urllib.request.urlopen(URL, timeout=60).read()
+    import ssl
+    ctx = ssl._create_unverified_context()
+    raw = urllib.request.urlopen(URL, context=ctx, timeout=60).read()
     with zipfile.ZipFile(io.BytesIO(raw)) as z:
         name = next(n for n in z.namelist() if n.lower().endswith(".csv"))
         return pd.read_csv(z.open(name))

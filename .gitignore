@@ -25,3 +25,4 @@ htmlcov/
 
 # Data downloads & temporary artifacts
 data/*.csv
+!data/ai4i2020.csv

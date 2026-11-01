@@ -1,0 +1,3 @@
+-r requirements.txt
+pytest
+ucimlrepo      # only needed by scripts/download_ai4i.py

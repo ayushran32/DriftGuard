@@ -23,6 +23,8 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
+
 html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #060d1f !important;
     color: #e2e8f0 !important;
@@ -32,7 +34,18 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
     background: #0a1628 !important;
     border-right: 1px solid rgba(0,212,255,0.12) !important;
 }
-[data-testid="stSidebar"] * { color: #cbd5e1 !important; font-family: 'Inter',sans-serif !important; }
+/* Text color without breaking icon fonts */
+[data-testid="stSidebar"] p,
+[data-testid="stSidebar"] label,
+[data-testid="stSidebar"] div {
+    color: #cbd5e1 !important;
+}
+/* Ensure Material Symbols are never overridden by Inter font */
+[data-testid="stSidebar"] span[class*="material-symbols"],
+[data-testid="stSidebarCollapseButton"] span,
+[data-testid="stSidebarCollapsedControl"] span {
+    font-family: 'Material Symbols Rounded' !important;
+}
 .stSelectbox > div > div {
     background: #0f1e35 !important;
     border: 1px solid rgba(0,212,255,0.22) !important;

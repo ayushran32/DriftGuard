@@ -69,7 +69,9 @@ html, body, [data-testid="stAppViewContainer"], [data-testid="stMain"] {
 .stButton > button:hover { box-shadow: 0 0 38px rgba(0,212,255,0.55) !important; }
 footer { display:none !important; }
 #MainMenu { display:none !important; }
-header[data-testid="stHeader"] { background: transparent !important; }
+.stDeployButton { display: none !important; }
+[data-testid="stToolbar"] { display: none !important; }
+header[data-testid="stHeader"] { display: none !important; }
 .block-container { padding-top: 1rem !important; padding-bottom: 0 !important; }
 @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
 </style>
